@@ -1,0 +1,52 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.3.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+}
+
+group = 'com.org.kaweel'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+repositories {
+	mavenCentral()
+}
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'io.projectreactor:reactor-test'
+
+	runtimeOnly 'com.h2database:h2'
+	implementation 'io.r2dbc:r2dbc-h2'
+
+	runtimeOnly 'org.postgresql:postgresql'
+	implementation 'io.r2dbc:r2dbc-postgresql'
+
+
+}
+test {
+	useJUnitPlatform(){
+		excludeTags 'integration'
+	}
+}
+
+task integration(type: Test) {
+	group = 'Custom task'
+	description = 'Run all integration test'
+	useJUnitPlatform {
+		includeTags 'integration'
+	}
+}
